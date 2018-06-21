@@ -1,13 +1,21 @@
 <?PHP
-	session_start();
 	ob_start();
 	$hostname = gethostname();
+	require_once "functions.php";
 
+	$user = session_check();
+
+	if (isset($user['id'])) {
+
+    		header("location: index.php");
+
+    		exit;
+
+	}
 	require_once "{$hostname}settings.php";
 	//require_once('dbConfig.php');
-
-        require_once('functions.php');
-	show_menu($user);
+	//$user = session_check();
+        //show_menu($user);
 ?>
 
 <html>
@@ -24,7 +32,7 @@
 
 <?PHP
 
-if(isset($_POST['send'])){
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	$login = trim($_POST['username']);
 
@@ -34,7 +42,7 @@ if(isset($_POST['send'])){
 
 	$sql = "select * from login where login = '".$login."'";
 
-	$rs = mysqli_query($db1,$sql);
+	$rs = mysqli_query($dbs,$sql);
 
 	$numRows = mysqli_num_rows($rs);
 
@@ -81,8 +89,9 @@ if(isset($_POST['send'])){
 
 }
 
+mysqli_close($dbs);
 ?>
-
+<?PHP show_menu($user); ?>
 <form method="post" action="login.php" class="uk-form">
 
     <fieldset data-uk-margin>

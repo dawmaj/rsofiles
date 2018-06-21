@@ -5,11 +5,11 @@
 	//require_once('dbConfig.php');
 	require_once "{$host}settings.php";
 	
-require_once __DIR__ . '/vendor/autoload.php';
+	require_once __DIR__ . '/vendor/autoload.php';
 
-use PhpAmqpLib\Connection\AMQPStreamConnection;
+	use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-use PhpAmqpLib\Message\AMQPMessage;
+	use PhpAmqpLib\Message\AMQPMessage;
 
 ?>
 <html>
@@ -19,7 +19,7 @@ use PhpAmqpLib\Message\AMQPMessage;
 </head>
 <body>
 <?PHP
-if(isset($_POST['send']))
+if($_SERVER["REQUEST_METHOD"] == "POST")
 {
 
 
@@ -64,8 +64,11 @@ $channel->close();
 
 $connection->close();
 	//$sql = "INSERT INTO posts (post) VALUE ('$post')";
-	//$res = mysqli_query($db, $sql);
+	//$res = mysqli_query($dbm, $sql);
 }
+
+mysqli_close($dbm);
+mysqli_close($dms);
 ?>
 <form method="post" action="addpost.php">
 	<br><input type="text" name="posts" maxlength="255"></br>
@@ -76,7 +79,7 @@ POSTY:
 <?PHP
 
   $sql1 = "SELECT * FROM posts";
-  $res1 = mysqli_query($db1,$sql1);
+  $res1 = mysqli_query($dbs,$sql1);
   redis_set_json("last_10_posts",$result,360);
 while($row = mysqli_fetch_array($res1)) {
 

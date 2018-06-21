@@ -1,11 +1,6 @@
 <?PHP
-	require_once('session.php');
-
-	session_start();
-
-	$user=check_session();
-
-	require_once('menu.php');
+        require_once('functions.php');
+	$user=session_check();
 ?>
 <html>
 <head>

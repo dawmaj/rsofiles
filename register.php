@@ -1,9 +1,9 @@
 <?php  
 	$hostname = gethostname();
-	//require_once "{$hostname}settings.php";
+	require_once "{$hostname}settings.php";
         require_once('functions.php');
-	require_once('dbConfig.php');
-	//$user = check_session();
+	//require_once('dbConfig.php');
+	$user = check_session();
 ?>
 <html>
 <head>
@@ -14,7 +14,7 @@
 
 <?php
 
-  if(isset($_POST['save']))
+  if($_SERVER["REQUEST_METHOD"] == "POST")
  {
   $login = $_POST['userName'];
   $name = $_POST['firstName'];
@@ -31,7 +31,7 @@
 {
     $password = password_hash($password,PASSWORD_DEFAULT);
     $sql = "INSERT INTO login (login,imie,nazwisko,pesel,nip,password,email,role,avatar) VALUES ('$login','$name','$surname','$pesel','$nip','$password','$email','$role','$image')";
-    $result = mysqli_query($db,$sql);
+    $result = mysqli_query($dbm,$sql);
 
     if (move_uploaded_file($_FILES['image']['tmp_name'],$target))
 	{
@@ -39,17 +39,17 @@
 	}
     else
 	{
-		echo "NOK";
+		echo "Image uploaded fail";
 	}
 
 }
 else
 {
-	echo "ERROR!";
+	echo "Password not the same!";
 }
  }
 
-
+mysqli_close($dbm);
 ?>
 
 <form name="frmRegistration" method="post" action="register.php" enctype="multipart/form-data">
@@ -68,11 +68,11 @@ else
 		</tr>
 		<tr>
 			<td>PESEL</td>
-			<td><input type="text"  name="PESEL" required></td>
+			<td><input pattern="[0-9]{11}" type="text"  name="PESEL" required></td>
 		</tr>
 		<tr>
 			<td>NIP</td>
-			<td><input type="text"  name="NIP" required></td>
+			<td><input pattern="[0-9]{10}" type="text"  name="NIP" required></td>
 		</tr>
 		<tr>
 			<td>Password</td>

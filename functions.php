@@ -2,7 +2,6 @@
 
 $hostname = gethostname();
 require_once "{$hostname}settings.php";
-require_once "session.php";
 
 function session_check()
 {
@@ -13,7 +12,7 @@ function session_check()
                 redis_set_json($token, $user,0);
         }
         else
-                $token="PHPREDIS_SESSION:{$_COOKIE['PHPSESSID']}";
+                $token=$_COOKIE['MYSID'];
         if (isset($_POST['username']) and isset($_POST['password']))
                 return authorize($_POST['username'],$_POST['password'],$token);
         else
@@ -23,11 +22,11 @@ function authorize($username,$password, $token)
 {
         if ($username!=NULL and $password!=NULL)
         {
-                if ($username=="kalkos" and $password=="qwerty")
+                /*if ($username=="kalkos" and $password=="qwerty")
                         $user=array('id'=>333,'username'=>$username);
                 else
                         $user=array('id'=>NULL,'username'=>"Visitor");
-                redis_set_json($token,$user,"0");
+                redis_set_json($token,$user,"0");*/
                 return $user;
         }
         else
@@ -57,8 +56,8 @@ function redis_get_json($key)
         $redisClient = new Redis();
         $redisClient->connect( REDIS_SERVER, REDIS_PORT );
 	$redisClient->auth(REDIS_PASSWORD);
-	$ret = Session::unserialize($redisClient->get($key));
-	//$ret=json_decode($redisClient->get($key),true);
+	//$ret = Session::unserialize($redisClient->get($key));
+	$ret=json_decode($redisClient->get($key),true);
         $redisClient->close();
         return $ret;
 }
@@ -66,14 +65,11 @@ function redis_get_json($key)
 function show_menu($user)
 
 {
+    echo '<pre>';
 
-	echo $user;
+    print_r($user);
 
-	echo '<pre>'; print_r($user); echo '</pre>';
-
-	
-
-	
+    echo '</pre>';	
 
 echo '
 
@@ -89,7 +85,7 @@ echo '
 
                         echo '<li class="uk-active"><a href="logout.php">Logout</a></li>';
 
-echo '        <li class="uk-parent"><a href="index.php">Home</a></li>
+			echo '<li class="uk-parent"><a href="index.php">Home</a></li>
 
     </ul>
 
