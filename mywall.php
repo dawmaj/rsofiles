@@ -23,9 +23,10 @@
 </head>
 <body>
 <?PHP
-	if ($user['id'] == 1)
+	if ($user['role'] == 1)
 	{
 	echo '<br><a href="queueaccept.php"><input type="button" value="ACCEPT POST"></a></br>';
+	echo '<br><a href="register.php"><input type="button" value="REGISTER"></a></br>';
 	}
 	else
 	{

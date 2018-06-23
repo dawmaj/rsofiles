@@ -1,10 +1,18 @@
 <?PHP
         require_once('functions.php');
-        //$user=check_session();
 	$host = gethostname();
-	//require_once('dbConfig.php');
 	require_once "{$host}settings.php";
-	
+
+    	$user=session_check();
+
+    	if (!isset($user['id'])) {
+
+        header("location: index.php");
+
+        exit;
+
+    	}
+
 	require_once __DIR__ . '/vendor/autoload.php';
 
 	use PhpAmqpLib\Connection\AMQPStreamConnection;

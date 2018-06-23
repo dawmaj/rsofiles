@@ -3,7 +3,16 @@
 	require_once "{$hostname}settings.php";
         require_once('functions.php');
 	//require_once('dbConfig.php');
-	$user = check_session();
+
+    	$user=session_check();
+
+    	if (!isset($user['id'])) {
+
+        header("location: index.php");
+
+        exit;
+
+    	}
 ?>
 <html>
 <head>
