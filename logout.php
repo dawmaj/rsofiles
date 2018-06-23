@@ -1,13 +1,23 @@
 <?php
+   require_once('functions.php');
 
-session_start();
+    $token = $_COOKIE['MYSID'];
 
-$_SESSION = array();
+    $user  = array(
 
-session_destroy();
+        'id' => NULL,
 
-header("location: login.php");
+        'username' => "VisitorLoggedOut",
 
-exit;
+	'role' => NULL
+
+    );
+
+    redis_set_json($token, $user, "0");
+
+    header("location: index.php");
+
+    exit;
+
 
 ?>

@@ -64,6 +64,7 @@ $channel->close();
 
 $connection->close();
 	//$sql = "INSERT INTO posts (post) VALUE ('$post')";
+	// $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 	//$res = mysqli_query($dbm, $sql);
 }
 
@@ -79,6 +80,7 @@ POSTY:
 <?PHP
 
   $sql1 = "SELECT * FROM posts";
+  $dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
   $res1 = mysqli_query($dbs,$sql1);
   redis_set_json("last_10_posts",$result,360);
 while($row = mysqli_fetch_array($res1)) {

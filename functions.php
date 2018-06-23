@@ -7,22 +7,22 @@ function session_check()
 {
         if(!isset($_COOKIE['MYSID'])) {
                 $token=md5(rand(0,1000000000));
-                setcookie('cookie', $token);
+                setcookie('MYSID', $token);
                 $user=array('id'=>NULL,'username'=>"Visitor");
                 redis_set_json($token, $user,0);
         }
         else
 {
-                $token=$_COOKIE['MYSID'];
+                $token="MYSID:".$_COOKIE['MYSID'];
 }
 		$expire = isset($_POST['remember']) ? 0 : 600;
 
         if (isset($_POST['username']) and isset($_POST['password']))
-                return authorize($_POST['username'],$_POST['password'],$token);
+                return authorize($_POST['username'],$_POST['password'],$token,$expire);
         else
-                return authorize(NULL,NULL,$token);
+                return authorize(NULL,NULL,$token,$expire);
 }
-function authorize($username,$password, $token)
+function authorize($username,$password, $token, $expire)
 {
         if ($username!=NULL and $password!=NULL)
         {
@@ -50,9 +50,9 @@ function authorize($username,$password, $token)
     			}
     			else{
                 		$password = trim($password);
-				$pass = password_hash($password, PASSWORD_DEFAULT);
-   			}
+			}
         		$sql = "select i, login, password, role from login where login = ?";
+			$dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 			if ($res = mysqli_prepare($dbs, $sql))
 			{
 				mysqli_stmt_bind_param($res, "s", $pr_usrname);
@@ -62,17 +62,19 @@ function authorize($username,$password, $token)
 				if (mysqli_stmt_num_rows($res) == 1) {
                             		mysqli_stmt_bind_result($res, $user['id'], $user['username'], $hashed_password, $user['role']);
                             	if (mysqli_stmt_fetch($res)) {
-                               	if (password_verify($pass, $hashed_password)) {
+                               	if (password_verify($password, $hashed_password)) {
                                     echo "All works!";
                                     redis_set_json($token, $user, $expire);
                                     return $user;
                                 }
 				else {
+				$user = array();
                                     echo "Pass not valid!";
                                     return $user;
 				}
 			    } //fetch
                         else {
+				$user = array();
                        		 echo "User not exists";
 			       	 return $user;
                     	}
@@ -136,7 +138,7 @@ echo '
 
     <ul class="uk-navbar-nav">';
 
-                if ($user==NULL and $user['username'] == NULL)
+                if ($user==NULL and $user['id'] != true)
                         echo '<li class="uk-active"><a href="login.php">Login</a></li>';
                 else
                         echo '<li class="uk-active"><a href="logout.php">Logout</a></li>

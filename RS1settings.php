@@ -17,7 +17,7 @@
 
     define('DB_DATABASE', 'users');
 
-    $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+/*    $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 
     $dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 
@@ -25,5 +25,6 @@
 
         die("ERROR: Could not connect. " . mysqli_connect_error());
 
-    }
+    } */
+
 ?>
