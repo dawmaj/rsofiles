@@ -1,6 +1,8 @@
 <?PHP
 	ob_start();
 	$hostname = gethostname();
+	require_once "{$hostname}settings.php";
+
 	require_once "functions.php";
 
 	$user = session_check();
@@ -12,7 +14,6 @@
     		exit;
 
 	}
-	require_once "{$hostname}settings.php";
 ?>
 
 <html>
