@@ -27,6 +27,72 @@ function authorize($username,$password, $token)
                 else
                         $user=array('id'=>NULL,'username'=>"Visitor");
                 redis_set_json($token,$user,"0");*/
+
+		
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $login = trim($_POST['username']);
+
+    $pass = trim($_POST['password']);
+
+   
+
+    $sql = "select * from login where login = '".$login."'";
+
+    $rs = mysqli_query($dbs,$sql);
+
+    $numRows = mysqli_num_rows($rs);
+
+   
+
+    if($numRows  == 1){
+
+        $row = mysqli_fetch_assoc($rs);
+
+        if(password_verify($pass,$row['password'])){
+
+            echo "Password verified";
+
+            if ($row['role'] == 1)
+
+            {
+
+               
+
+                               
+
+                header("refresh:2;url=queueaccept.php");
+
+            }
+
+            else
+
+            {
+
+                header("refresh:2;url=addpost.php");
+
+            }
+
+        }
+
+        else{
+
+            echo "Wrong Password";
+
+        }
+
+    }
+
+    else{
+
+        echo "No User found";
+
+    }
+
+}
+
+		mysqli_close($dbs);
                 return $user;
         }
         else
@@ -56,7 +122,6 @@ function redis_get_json($key)
         $redisClient = new Redis();
         $redisClient->connect( REDIS_SERVER, REDIS_PORT );
 	$redisClient->auth(REDIS_PASSWORD);
-	//$ret = Session::unserialize($redisClient->get($key));
 	$ret=json_decode($redisClient->get($key),true);
         $redisClient->close();
         return $ret;
@@ -84,6 +149,7 @@ echo '
                 else
 
                         echo '<li class="uk-active"><a href="logout.php">Logout</a></li>';
+			echo '<li class="uk-active"><a href="addpost.php">Add new post</a></li>';
 
 			echo '<li class="uk-parent"><a href="index.php">Home</a></li>
 

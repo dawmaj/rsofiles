@@ -99,9 +99,7 @@ mysqli_close($dbs);
 
         <input name="password" type="password" type="password" placeholder="password">
 
-        <button class="uk-button" name ="send">Go!</button>
-
-        <label><input type="checkbox">Remember me!</label>
+        <button class="uk-button" name ="send">Send to login!</button>
 
     </fieldset>
 

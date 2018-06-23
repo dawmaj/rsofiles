@@ -8,7 +8,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 
 
-$connection = new AMQPStreamConnection("192.168.100.10", 5672, 'admin', 'admin');
+$connection = new AMQPStreamConnection('192.168.100.10', 5672, 'admin', 'admin');
 
 $channel = $connection->channel();
 

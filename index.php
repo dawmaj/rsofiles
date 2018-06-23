@@ -10,7 +10,7 @@
 </head>
 <body>
 <?PHP show_menu($user); ?>
-Hello <?PHP echo $user['username']; ?>! This is my website.
+Hello <?PHP echo $user['username']; ?>! This is your website.
 </body>
 </html>
 
