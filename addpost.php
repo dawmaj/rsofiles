@@ -68,8 +68,8 @@ $connection->close();
 	//$res = mysqli_query($dbm, $sql);
 }
 
-mysqli_close($dbm);
-mysqli_close($dms);
+//mysqli_close($dbm);
+//mysqli_close($dms);
 ?>
 <form method="post" action="addpost.php">
 	<br><input type="text" name="posts" maxlength="255"></br>

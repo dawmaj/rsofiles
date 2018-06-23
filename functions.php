@@ -138,11 +138,11 @@ echo '
 
     <ul class="uk-navbar-nav">';
 
-                if ($user==NULL and $user['id'] != true)
+                if ($user==NULL or $user['id'] != true)
                         echo '<li class="uk-active"><a href="login.php">Login</a></li>';
                 else
                         echo '<li class="uk-active"><a href="logout.php">Logout</a></li>
-			<li class="uk-active"><a href="addpost.php">Add new post</a></li>';
+			<li class="uk-active"><a href="mywall.php">My wall</a></li>';
 			echo '<li class="uk-parent"><a href="index.php">Home</a></li>
 
     </ul>
