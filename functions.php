@@ -30,11 +30,10 @@ function authorize($username,$password, $token)
                 else
                         $user=array('id'=>NULL,'username'=>"Visitor");
                 redis_set_json($token,$user,"0");*/
-
 		$user = array();
 
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+	if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if (empty(trim($username))) {
 	echo "Empty username!";
@@ -72,11 +71,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
                             if (mysqli_stmt_fetch($stmt)) {
 
-                                if (password_verify($password, $hashed_password)) {
+                                if (password_verify($pass, $hashed_password)) {
 
                                     echo "All works!";
                                     redis_set_json($token, $user, $expire);
-
                                     return $user;
 
                                 }
@@ -95,7 +93,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		} //numrows
 		else {
 
-                	 echo "Try again later.";
+                	 echo "Try again later";
 
          		}
 		} //execute
@@ -107,7 +105,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 }
 function logout($user)
 {
-        $token=$_COOKIE['cookie'];
+        $token=$_COOKIE['MYSID'];
         $user=array('id'=>NULL,'username'=>"Visitor");
         redis_set_json($token,$user,"0");
         return $user;
@@ -141,7 +139,7 @@ function show_menu($user)
 
     print_r($user);
 
-    echo '</pre>';	
+    echo '</pre>';
 
 echo '
 
@@ -150,11 +148,11 @@ echo '
     <ul class="uk-navbar-nav">';
 
                 if ($user==NULL and $user['username'] == NULL)
-
+		{
                         echo '<li class="uk-active"><a href="login.php">Login</a></li>';
-
+		}
                 else
-
+		{
                         echo '<li class="uk-active"><a href="logout.php">Logout</a></li>
 			<li class="uk-active"><a href="addpost.php">Add new post</a></li>';
 			echo '<li class="uk-parent"><a href="index.php">Home</a></li>
@@ -162,6 +160,6 @@ echo '
     </ul>
 
 </nav>';
-
+		}
 }
 ?>
