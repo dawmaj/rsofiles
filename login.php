@@ -29,7 +29,7 @@
 
 <?PHP
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+/*if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 	$login = trim($_POST['username']);
 
@@ -86,7 +86,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 }
 
-mysqli_close($dbs);
+mysqli_close($dbs);*/
 ?>
 <?PHP show_menu($user); ?>
 <form method="post" action="login.php" class="uk-form">

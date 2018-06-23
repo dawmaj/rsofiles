@@ -13,6 +13,9 @@ function session_check()
         }
         else
                 $token=$_COOKIE['MYSID'];
+
+		$expire = isset($_POST['remember']) ? 0 : 600;
+
         if (isset($_POST['username']) and isset($_POST['password']))
                 return authorize($_POST['username'],$_POST['password'],$token);
         else
@@ -28,72 +31,76 @@ function authorize($username,$password, $token)
                         $user=array('id'=>NULL,'username'=>"Visitor");
                 redis_set_json($token,$user,"0");*/
 
-		
+		$user = array();
+
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    $login = trim($_POST['username']);
+    if (empty(trim($username))) {
+	echo "Empty username!";
+    }
+    else
+	{
+		$user['username'] = trim($username);
+	}
+    if (empty(trim($password))) {
 
-    $pass = trim($_POST['password']);
-
-   
-
-    $sql = "select * from login where login = '".$login."'";
-
-    $rs = mysqli_query($dbs,$sql);
-
-    $numRows = mysqli_num_rows($rs);
-
-   
-
-    if($numRows  == 1){
-
-        $row = mysqli_fetch_assoc($rs);
-
-        if(password_verify($pass,$row['password'])){
-
-            echo "Password verified";
-
-            if ($row['role'] == 1)
-
-            {
-
-               
-
-                               
-
-                header("refresh:2;url=queueaccept.php");
-
-            }
-
-            else
-
-            {
-
-                header("refresh:2;url=addpost.php");
-
-            }
-
-        }
-
-        else{
-
-            echo "Wrong Password";
-
-        }
+                echo "Please enter your password!";
 
     }
+    else {
 
-    else{
+                $password = trim($password);
 
-        echo "No User found";
+		$pass = password_hash($password, PASSWORD_DEFAULT);
+   }
 
-    }
+        $sql = "select i,login,password,role from login where login = ?";
 
-}
+	if ($res = mysqli_prepare($dbs, $sql))
+		{
+			mysqli_stmt_bind_param($res, "s", $pr_usrname);
+			$pr_usrname = $username;
 
+			if (mysqli_stmt_execute($res)) {
+
+				mysqli_stmt_store_result($res);
+
+			if (mysqli_stmt_num_rows($res) == 1) {
+
+                            mysqli_stmt_bind_result($res, $user['id'], $user['username'], $hashed_password, $user['isAdmin']);
+
+                            if (mysqli_stmt_fetch($stmt)) {
+
+                                if (password_verify($password, $hashed_password)) {
+
+                                    echo "All works!";
+                                    redis_set_json($token, $user, $expire);
+
+                                    return $user;
+
+                                }
+				else {
+
+                                    echo "Pass not valid!";
+                                    return $user;
+				}
+			    } //fetch
+                        else {
+
+                       		 echo "User not exists";
+			       	 return $user;
+
+                    	}
+		} //numrows
+		else {
+
+                	 echo "Try again later.";
+
+         		}
+		} //execute
+                mysqli_stmt_close($res);
 		mysqli_close($dbs);
-                return $user;
         }
         else
                 return redis_get_json($token);
@@ -142,15 +149,14 @@ echo '
 
     <ul class="uk-navbar-nav">';
 
-                if ($user==NULL or $user['username']==NULL)
+                if ($user==NULL and $user['username'] == NULL)
 
                         echo '<li class="uk-active"><a href="login.php">Login</a></li>';
 
                 else
 
-                        echo '<li class="uk-active"><a href="logout.php">Logout</a></li>';
-			echo '<li class="uk-active"><a href="addpost.php">Add new post</a></li>';
-
+                        echo '<li class="uk-active"><a href="logout.php">Logout</a></li>
+			<li class="uk-active"><a href="addpost.php">Add new post</a></li>';
 			echo '<li class="uk-parent"><a href="index.php">Home</a></li>
 
     </ul>
