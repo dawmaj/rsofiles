@@ -13,9 +13,6 @@
 
 	}
 	require_once "{$hostname}settings.php";
-	//require_once('dbConfig.php');
-	//$user = session_check();
-        //show_menu($user);
 ?>
 
 <html>
