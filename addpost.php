@@ -12,13 +12,11 @@
         exit;
 
     	}
-	/*
-	require_once __DIR__ . '/vendor/autoload.php';
-
+/*
 	use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 	use PhpAmqpLib\Message\AMQPMessage;
-	*/
+*/
 ?>
 <html>
 <head>
@@ -32,7 +30,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 
 {
 /*
-$connection = new AMQPStreamConnection('192.168.100.10', 5672, 'admin', 'admin');
+$connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS);
 
 $channel = $connection->channel();
 
@@ -44,7 +42,7 @@ $data = implode(' ', array_slice($argv, 1));
 
 if (empty($data)) {
 
-    $data = "Hello World!";
+    $data = $post;
 
 }
 

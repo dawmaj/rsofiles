@@ -17,6 +17,16 @@
 
     define('DB_DATABASE', 'users');
 
+    require_once __DIR__ . '/vendor/autoload.php';
+
+    define('RABBIT_SRV','192.168.47.130');
+
+    define('RABBIT_PORT',5672);
+
+    define('RABBIT_USER','admin');
+
+    define('RABBIT_PASS','admin');
+
 /*    $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 
     $dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
