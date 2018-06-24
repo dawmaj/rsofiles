@@ -99,7 +99,7 @@ mysqli_close($dbs);*/
 	<br> Rembember me!
 	<input type="checkbox" name="remember" value="yes">
         <br>
-	<button class="uk-button" name ="send">Send to login!</button>
+	<button class="uk-button uk-button-primary uk-button-large" name ="send"> Send to login! </button>
 
     </fieldset>
 

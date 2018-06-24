@@ -76,11 +76,11 @@ mysqli_close($dbm);
 }
 ?>
 <form method="post" action="addpost.php">
-	<br><input type="text" name="posts" maxlength="255"></br>
-	<br><input type="submit" name="send"value="SEND POST"></br>
+		<h2><span class="uk-text-danger">WRITE YOUR POST HERE</span></h2>
+		<br><input type="text" name="posts" maxlength="255"></br>
+		<br><input type="submit" name="send"value="SEND POST"></br>
+		<br><span class="uk-label-success">POSTS:</span></br>
 </form>
-POSTY:
-<br>
 
 <?PHP
   $posty = array();
