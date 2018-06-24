@@ -71,8 +71,7 @@ echo ' [x] Sent ', $posts, "\n";
 $channel->close();
 
 $connection->close();
-	$date = date('m/d/Y h:i:s a', time());
-	$sql = "INSERT INTO posts (id,post,date) VALUE ('".$user['id']."','$post',now())";
+	$sql = "INSERT INTO posts (id,post) VALUE ('".$user['id']."','$post')";
 	$dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 	$res = mysqli_query($dbm, $sql);
 }
@@ -86,19 +85,31 @@ mysqli_close($dbm);
 POSTY:
 
 <?PHP
+  $redisClient = new Redis();
 
+  $redisClient->connect( REDIS_SERVER, REDIS_PORT );
+  $redisClient->auth(REDIS_PASSWORD);
+  $posty = array();
   $sql1 = "select * from posts ORDER BY date DESC LIMIT 10";
   $dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
-  $res1 = mysqli_query($dbs,$sql1);
-  redis_set_json("last_10_posts",$res1,360);
-while($row = mysqli_fetch_array($res1)) {
+  if (($posty = $redisClient->get("last_10_posts")) == NULL)
+  {
+	$res1 = mysqli_query($dbs,$sql1);
+	while($row = mysqli_fetch_array($res1)) {
+		redis_set_json("last_10_posts",$row,15);
+		$post =  redis_get_json(last_10_posts);
+		echo $post['post']."<br>";
+	}
+ }
+  else
+   {	
+	$post =  redis_get_json(last_10_posts);
+	
+	print_r($post['post']);
+   }
 
-    $p = $row['post'];
-
-    echo $p."<br>";
-
-}
   mysqli_close($dms);
+$redisClient->close();
 ?>
 </body>
 </html>
