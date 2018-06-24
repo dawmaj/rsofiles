@@ -71,13 +71,13 @@ echo ' [x] Sent ', $posts, "\n";
 $channel->close();
 
 $connection->close();
-	//$sql = "INSERT INTO posts (post,id) VALUE ('$post',$user['id'])";
-	// $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
-	//$res = mysqli_query($dbm, $sql);
+	$date = date('m/d/Y h:i:s a', time());
+	$sql = "INSERT INTO posts (id,post,date) VALUE ('".$user['id']."','$post',now())";
+	$dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+	$res = mysqli_query($dbm, $sql);
 }
 
-//mysqli_close($dbm);
-//mysqli_close($dms);
+mysqli_close($dbm);
 ?>
 <form method="post" action="addpost.php">
 	<br><input type="text" name="posts" maxlength="255"></br>
@@ -87,10 +87,10 @@ POSTY:
 
 <?PHP
 
-  $sql1 = "SELECT * FROM posts";
+  $sql1 = "select * from posts ORDER BY date DESC LIMIT 10";
   $dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
   $res1 = mysqli_query($dbs,$sql1);
-  redis_set_json("last_10_posts",$result,360);
+  redis_set_json("last_10_posts",$res1,360);
 while($row = mysqli_fetch_array($res1)) {
 
     $p = $row['post'];
@@ -98,6 +98,7 @@ while($row = mysqli_fetch_array($res1)) {
     echo $p."<br>";
 
 }
+  mysqli_close($dms);
 ?>
 </body>
 </html>
