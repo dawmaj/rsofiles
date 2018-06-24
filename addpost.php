@@ -71,7 +71,7 @@ echo ' [x] Sent ', $posts, "\n";
 $channel->close();
 
 $connection->close();
-	//$sql = "INSERT INTO posts (post) VALUE ('$post')";
+	//$sql = "INSERT INTO posts (post,id) VALUE ('$post',$user['id'])";
 	// $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 	//$res = mysqli_query($dbm, $sql);
 }

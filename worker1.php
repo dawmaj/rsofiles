@@ -14,22 +14,23 @@ $channel = $connection->channel();
 
 
 
-$result = ($channel->basic_get('task_queue', true, null)->body);
+$channel->queue_declare('task_queue', false, true, false, false);
+
 
 
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
 
 
-$callback = function ($result) {
+$callback = function ($msg) {
 
-    echo ' [x] Received ', $result->body, "\n";
+    echo ' [x] Received ', $msg->body, "\n";
 
-    sleep(substr_count($result->body, '.'));
+    sleep(substr_count($msg->body, '.'));
 
     echo " [x] Done\n";
 
-    $result->delivery_info['channel']->basic_ack($result->delivery_info['delivery_tag']);
+    $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
 
 };
 

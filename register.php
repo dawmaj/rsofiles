@@ -51,15 +51,16 @@
 	{
 		echo "Image uploaded fail";
 	}
+	mysqli_close($dbm);
 
 }
 else
 {
 	echo "Password not the same!";
 }
- }
 
-mysqli_close($dbm);
+}
+
 ?>
 
 <form name="frmRegistration" method="post" action="register.php" enctype="multipart/form-data">
