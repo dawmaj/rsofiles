@@ -96,8 +96,10 @@ mysqli_close($dbs);*/
         <input name="username" type="text" placeholder="username">
 
         <input name="password" type="password" type="password" placeholder="password">
-
-        <button class="uk-button" name ="send">Send to login!</button>
+	<br> Rembember me!
+	<input type="checkbox" name="remember" value="yes">
+        <br>
+	<button class="uk-button" name ="send">Send to login!</button>
 
     </fieldset>
 

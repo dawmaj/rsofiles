@@ -12,13 +12,13 @@
         exit;
 
     	}
-
+	/*
 	require_once __DIR__ . '/vendor/autoload.php';
 
 	use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 	use PhpAmqpLib\Message\AMQPMessage;
-
+	*/
 ?>
 <html>
 <head>
@@ -31,15 +31,13 @@
 if($_SERVER["REQUEST_METHOD"] == "POST")
 
 {
-
+/*
 $connection = new AMQPStreamConnection('192.168.100.10', 5672, 'admin', 'admin');
 
 $channel = $connection->channel();
 
 
-
-$channel->queue_declare('task_queue', false, true, false, false);
-
+$channel->queue_declare('posts', false, true, false, false);
 
 
 $data = implode(' ', array_slice($argv, 1));
@@ -59,26 +57,24 @@ $msg = new AMQPMessage(
 );
 
 
-
-$channel->basic_publish($msg, '', 'task_queue');
-
-
+$channel->basic_publish($msg, '', 'posts');
 
 echo ' [x] Sent ', $data, "\n";
-
-
 
 $channel->close();
 
 $connection->close();
-	$post = $_POST['posts'];
-	$sql = "INSERT INTO posts (id,post) VALUE ('".$user['id']."','$post')";
+*/
+$post = $_POST['posts'];
 
-	$dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+$sql = "INSERT INTO posts (id,post) VALUE ('".$user['id']."','$post')";
 
-	$res = mysqli_query($dbm, $sql);
-	
-	mysqli_close($dbm);
+$dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+
+$res = mysqli_query($dbm, $sql);
+
+mysqli_close($dbm);
+
 }
 ?>
 <form method="post" action="addpost.php">
@@ -101,7 +97,7 @@ POSTY:
 	while($row = mysqli_fetch_array($res1)) {
 		$arraywithPosts[] = $row;
 	}
-	redis_set_json("last_10_posts",$arraywithPosts,30);
+	redis_set_json("last_10_posts",$arraywithPosts,10);
  }
   else
    {
@@ -110,7 +106,7 @@ POSTY:
 
    foreach ($posty as &$mypost)
 	{
-		echo $mypost['post']."<br>";
+		echo "This post is described by ".$mypost['id']." text: ".$mypost['post']."<br>";
 	}
 
 mysqli_close($dbs);

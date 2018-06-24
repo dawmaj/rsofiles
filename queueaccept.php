@@ -7,6 +7,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 
+function getMsg() {
 
 $connection = new AMQPStreamConnection('192.168.100.10', 5672, 'admin', 'admin');
 
@@ -14,8 +15,9 @@ $channel = $connection->channel();
 
 
 
-$channel->queue_declare('task_queue', false, true, false, false);
+$channel->queue_declare('posts', false, true, false, false);
 
+$message = $channel->basic_get('task_queue');
 
 $callback = function ($msg) {
 
@@ -37,20 +39,18 @@ $channel->basic_consume('task_queue', '', false, false, false, false, $callback)
 
 
 
-while (count($channel->callbacks)) {
+$channel->close();
 
-    $channel->wait();
+$connection->close();
 
 }
 
 
 
-$channel->close();
-
-$connection->close();
 
 ?>
 
 
-<br><input type="button" id="add" value="ACCEPT POST"></a></br>
-<br><input type="button" id="del" value="DELETE POST"></a></br>
+<br><input type="button" id="add" value="ACCEPT POST"></br>
+<br><input type="button" id="del" value="DELETE POST"></br>
+<br><input type="button" onclick="getMsg()" id="get" value="GET POST"></br>
