@@ -42,22 +42,26 @@ mysqli_close($dbm);
 
 $post_json = json_encode($post);
 
-$connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS);
+$connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS, '/');
 
 $channel = $connection->channel();
 
-$channel->queue_declare('posts', false, true, false, false);
+$channel->queue_declare('posts_list', false, true, false, false);
+
+$channel->exchange_declare('get_posts', 'direct', false, true, false);
+
+$channel->queue_bind('posts_list', 'get_posts');
 
 $msg = new AMQPMessage(
 
         $post_json, ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
 );
 
-$channel->basic_publish($msg, '', 'posts');
+$channel->basic_publish($msg, 'get_posts');
 
 $decode = json_decode($msg->body, true);
 
-echo $decode;
+echo "Send to queue ".$decode;
 
 $channel->close();
 
@@ -71,6 +75,7 @@ $connection->close();
 		<h2><span class="uk-text-danger">WRITE YOUR POST HERE</span></h2>
 		<br><input type="text" name="posts" maxlength="255"></br>
 		<br><input type="submit" name="send"value="SEND POST"></br>
+		<br><a href="addpost.php"><input type="button" value="REFRESH WALL"></a></br>
 		<br><span class="uk-label-success">POSTS:</span></br>
 </form>
 
