@@ -25,11 +25,13 @@
 <?PHP
 	if ($user['role'] == 1)
 	{
+	show_menu($user);
 	echo '<br><a href="queueaccept.php"><input type="button" value="ACCEPT POST"></a></br>';
 	echo '<br><a href="register.php"><input type="button" value="REGISTER"></a></br>';
 	}
 	else
 	{
+	show_menu($user);
 	echo '<br><a href="addpost.php"><input type="button" value="ADD POSTS"></a></br>';
 	}
 ?>

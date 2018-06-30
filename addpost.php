@@ -2,8 +2,7 @@
         require_once('functions.php');
 	$host = gethostname();
 	require_once "{$host}settings.php";
-
-    	$user=session_check();
+	$user=session_check();
 
     	if (!isset($user['id'])) {
 
@@ -12,11 +11,10 @@
         exit;
 
     	}
-/*
 	use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 	use PhpAmqpLib\Message\AMQPMessage;
-*/
+	error_reporting(0);
 ?>
 <html>
 <head>
@@ -29,7 +27,9 @@
 if($_SERVER["REQUEST_METHOD"] == "POST")
 
 {
-/*
+
+$post = $_POST['posts'];
+
 $connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS);
 
 $channel = $connection->channel();
@@ -40,30 +40,19 @@ $channel->queue_declare('posts', false, true, false, false);
 
 $data = implode(' ', array_slice($argv, 1));
 
-if (empty($data)) {
-
-    $data = $post;
-
-}
+$data = $post;
 
 $msg = new AMQPMessage(
 
-    $data,
-
-    array('delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT)
-
+        $data, ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
 );
 
 
 $channel->basic_publish($msg, '', 'posts');
 
-echo ' [x] Sent ', $data, "\n";
-
 $channel->close();
 
 $connection->close();
-*/
-$post = $_POST['posts'];
 
 $sql = "INSERT INTO posts (id,post) VALUE ('".$user['id']."','$post')";
 
@@ -75,6 +64,8 @@ mysqli_close($dbm);
 
 }
 ?>
+<?PHP show_menu($user); ?>
+
 <form method="post" action="addpost.php">
 		<h2><span class="uk-text-danger">WRITE YOUR POST HERE</span></h2>
 		<br><input type="text" name="posts" maxlength="255"></br>
@@ -104,7 +95,7 @@ mysqli_close($dbm);
 
    foreach ($posty as &$mypost)
 	{
-		echo "This post is described by ".$mypost['id']." text: ".$mypost['post']."<br>";
+		echo "This post is described by user with ID: ".$mypost['id']." text: ".$mypost['post']."<br>";
 	}
 
 mysqli_close($dbs);

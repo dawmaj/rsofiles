@@ -15,6 +15,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.26.3/js/uikit.min.js"> </script>
 </head>
 <body>
+<?PHP
+show_user($user);
+?>
 <input class="uk-button uk-button-primary" value="REJECT POST">
 <input class="uk-button uk-button-primary" value="REMAIN POST">
 </body>

@@ -62,7 +62,7 @@ else
 }
 
 ?>
-
+<?PHP show_menu($user); ?>
 <form name="frmRegistration" method="post" action="register.php" enctype="multipart/form-data">
 	<table border="0" width="500" align="center" class="demo-table">
 		<tr>

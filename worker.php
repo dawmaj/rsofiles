@@ -6,21 +6,13 @@ require_once "{$host}settings.php";
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
-
-
 $connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS);
 
 $channel = $connection->channel();
 
-
-
 $channel->queue_declare('posts', false, true, false, false);
 
-
-
 echo " [*] Waiting for messages. To exit press CTRL+C\n";
-
-
 
 $callback = function ($msg) {
 
@@ -34,21 +26,15 @@ $callback = function ($msg) {
 
 };
 
-
-
 $channel->basic_qos(null, 1, null);
 
 $channel->basic_consume('posts', '', false, false, false, false, $callback);
-
-
 
 while (count($channel->callbacks)) {
 
     $channel->wait();
 
 }
-
-
 
 $channel->close();
 
