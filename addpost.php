@@ -14,7 +14,7 @@
 	use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 	use PhpAmqpLib\Message\AMQPMessage;
-	error_reporting(0);
+	//error_reporting(0);
 ?>
 <html>
 <head>
@@ -30,30 +30,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 
 $post = $_POST['posts'];
 
-$connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS);
-
-$channel = $connection->channel();
-
-
-$channel->queue_declare('posts', false, true, false, false);
-
-
-$data = implode(' ', array_slice($argv, 1));
-
-$data = $post;
-
-$msg = new AMQPMessage(
-
-        $data, ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
-);
-
-
-$channel->basic_publish($msg, '', 'posts');
-
-$channel->close();
-
-$connection->close();
-
 $sql = "INSERT INTO posts (id,post) VALUE ('".$user['id']."','$post')";
 
 $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
@@ -61,6 +37,31 @@ $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 $res = mysqli_query($dbm, $sql);
 
 mysqli_close($dbm);
+
+
+
+$post_json = json_encode($post);
+
+$connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS);
+
+$channel = $connection->channel();
+
+$channel->queue_declare('posts', false, true, false, false);
+
+$msg = new AMQPMessage(
+
+        $post_json, ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
+);
+
+$channel->basic_publish($msg, '', 'posts');
+
+$decode = json_decode($msg->body, true);
+
+echo $decode;
+
+$channel->close();
+
+$connection->close();
 
 }
 ?>

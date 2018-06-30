@@ -12,30 +12,25 @@ $channel = $connection->channel();
 
 $channel->queue_declare('posts', false, true, false, false);
 
-echo " [*] Waiting for messages. To exit press CTRL+C\n";
+$message = $channel->basic_get('posts');
 
-$callback = function ($msg) {
+if (empty($message)) {
 
-    echo ' [x] Received ', $msg->body, "\n";
+        $channel->close();
 
-    sleep(substr_count($msg->body, '.'));
+        $connection->close();
 
-    echo " [x] Done\n";
+        return false;
 
-    $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+    }
 
-};
+    $channel->basic_ack($message->delivery_info['delivery_tag']);
 
-$channel->basic_qos(null, 1, null);
-
-$channel->basic_consume('posts', '', false, false, false, false, $callback);
-
-while (count($channel->callbacks)) {
-
-    $channel->wait();
-
-}
+    $post = json_decode($message->body, true);
+    $post = array_merge($post, $post);
 
 $channel->close();
 
 $connection->close();
+
+return $post;
