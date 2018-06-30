@@ -37,31 +37,31 @@ $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 $res = mysqli_query($dbm, $sql);
 
 mysqli_close($dbm);
+//dodanie do bazy user id i posta - data dodaje sie automatycznie w db
 
-
-
+//zwraca JSON o wartosci post
 $post_json = json_encode($post);
-
+//polaczenie z kolejka o serwerze, porcie, userze, pass i VHOST = /
 $connection = new AMQPStreamConnection(RABBIT_SRV, RABBIT_PORT, RABBIT_USER, RABBIT_PASS, '/');
-
+//like socket
 $channel = $connection->channel();
-
+//make sure that RabbitMQ will never lose our queue. In order to do so, we need to declare it as durable
 $channel->queue_declare('posts_list', false, true, false, false);
-
+//wymiana  bezposrednia do kilku kolejek
 $channel->exchange_declare('get_posts', 'direct', false, true, false);
-
+//tell the exchange to send messages to our queue
 $channel->queue_bind('posts_list', 'get_posts');
-
+//msg as json  as a plain text delivery mode 'persistent' that are delivered to 'durable' queues will be logged to disk
 $msg = new AMQPMessage(
 
         $post_json, ['content_type' => 'text/plain', 'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT]
 );
-
+//publikuj do kolejki get_posts
 $channel->basic_publish($msg, 'get_posts');
-
+//odkodowanie wiadomosci
 $decode = json_decode($msg->body, true);
-
-echo "Send to queue ".$decode;
+//sprawdzenie czy wyslalo
+echo "Send to queue: ".$decode;
 
 $channel->close();
 
@@ -92,10 +92,12 @@ $connection->close();
 	while($row = mysqli_fetch_array($res1)) {
 		$arraywithPosts[] = $row;
 	}
-	redis_set_json("last_10_posts",$arraywithPosts,10);
+	//last_10_posts = store arraywithPosts for 20 seconds
+	redis_set_json("last_10_posts",$arraywithPosts,20);
  }
   else
    {
+	//get 10 posts if we have last_10_posts in redis
 	$posty =  redis_get_json("last_10_posts");
    }
 

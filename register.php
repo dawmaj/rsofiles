@@ -2,10 +2,8 @@
 	$hostname = gethostname();
 	require_once "{$hostname}settings.php";
         require_once('functions.php');
-	//require_once('dbConfig.php');
-
     	$user=session_check();
-
+	// if not user have logged and not admin then return to index.php
     	if (!isset($user['id']) or $user['role'] != 1) {
 
         header("location: index.php");
@@ -42,7 +40,7 @@
     $sql = "INSERT INTO login (login,imie,nazwisko,pesel,nip,password,email,role,avatar) VALUES ('$login','$name','$surname','$pesel','$nip','$password','$email','$role','$image')";
     $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
     $result = mysqli_query($dbm,$sql);
-
+//insert image
     if (move_uploaded_file($_FILES['image']['tmp_name'],$target))
 	{
 		echo "OK!";

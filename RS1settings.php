@@ -5,7 +5,7 @@
 
     define('REDIS_PASSWORD','qwerty');
 
-    
+    //up - redis defined
 
     define('DB_SERVER_M', 'localhost:3306');
     
@@ -17,6 +17,8 @@
 
     define('DB_DATABASE', 'users');
 
+   // up - db defined
+
     require_once __DIR__ . '/vendor/autoload.php';
 
     define('RABBIT_SRV','192.168.47.130');
@@ -27,6 +29,7 @@
 
     define('RABBIT_PASS','admin');
 
+   // up - rabbitmq credientals
 /*    $dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 
     $dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);

@@ -15,8 +15,7 @@ function session_check()
 {
                 $token="MYSID:".$_COOKIE['MYSID'];
 }
-	$expire = isset($_POST['remember']) ? 0 : 600;
-
+	$expire = isset($_POST['remember']) ? 0 : 300;
         if (isset($_POST['username']) and isset($_POST['password']))
                 return authorize($_POST['username'],$_POST['password'],$token,$expire);
         else
@@ -55,11 +54,16 @@ function authorize($username,$password, $token, $expire)
 			$dbs = mysqli_connect(DB_SERVER_S,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
 			if ($res = mysqli_prepare($dbs, $sql))
 			{
+				// bind variables to prepared statement as parameters
 				mysqli_stmt_bind_param($res, "s", $pr_usrname);
+				// set params
 				$pr_usrname = $username;
 				if (mysqli_stmt_execute($res)) {
+				//store result
 					mysqli_stmt_store_result($res);
+				//if user exists, verify password
 				if (mysqli_stmt_num_rows($res) == 1) {
+					// Bind result variables
                             		mysqli_stmt_bind_result($res, $user['id'], $user['username'], $hashed_password, $user['role']);
                             	if (mysqli_stmt_fetch($res)) {
                                	if (password_verify($password, $hashed_password)) {
@@ -93,7 +97,7 @@ function authorize($username,$password, $token, $expire)
                 return redis_get_json($token);
 	}
 }
-
+//this function i don't use
 function logout($user)
 {
         $token=$_COOKIE['MYSID'];
@@ -103,14 +107,16 @@ function logout($user)
 }
 function redis_set_json($key, $val, $expire)
 {
+	//connect to redis
         $redisClient = new Redis();
 	$redisClient->connect( REDIS_SERVER, REDIS_PORT );
-	$redisClient->auth(REDIS_PASSWORD);
-      	$value=json_encode($val);
+	$redisClient->auth(REDIS_PASSWORD); //pass in /etc/redis/redis.conf
+      	//zakodowany string JSON
+	$value=json_encode($val);
         if ($expire > 0)
-                $redisClient->setex($key, $expire, $value );
+                $redisClient->setex($key, $expire, $value); //set expire with given key and value
         else
-                $redisClient->set($key, $value);
+                $redisClient->set($key, $value); //if expire = foverer only set key and value
         $redisClient->close();
 }
 function redis_get_json($key)
@@ -118,6 +124,7 @@ function redis_get_json($key)
         $redisClient = new Redis();
         $redisClient->connect( REDIS_SERVER, REDIS_PORT );
 	$redisClient->auth(REDIS_PASSWORD);
+	//odkodowany json
 	$ret=json_decode($redisClient->get($key),true);
         $redisClient->close();
         return $ret;
@@ -126,6 +133,7 @@ function redis_get_json($key)
 function show_menu($user)
 
 {
+//control what user we have
     echo '<pre>';
 
     print_r($user);
@@ -137,7 +145,7 @@ echo '
 <nav class="uk-navbar">
 
     <ul class="uk-navbar-nav">';
-
+//if dont have user just login and home if logged logout and mywall
                 if ($user==NULL or $user['id'] != true)
                         echo '<li class="uk-active"><a href="login.php">Login</a></li>';
                 else

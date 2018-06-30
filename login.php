@@ -25,67 +25,6 @@
 
 <body>
 
-<?PHP
-
-/*if($_SERVER["REQUEST_METHOD"] == "POST"){
-
-	$login = trim($_POST['username']);
-
-	$pass = trim($_POST['password']);
-
-	
-
-	$sql = "select * from login where login = '".$login."'";
-
-	$rs = mysqli_query($dbs,$sql);
-
-	$numRows = mysqli_num_rows($rs);
-
-	
-
-	if($numRows  == 1){
-
-		$row = mysqli_fetch_assoc($rs);
-
-		if(password_verify($pass,$row['password'])){
-
-			echo "Password verified";
-			
-			session_start();
-
-                        $_SESSION['username'] = $login;
-			$_SESSION['loggedin'] = true;
-
-			if ($row['role'] == 1)
-			{
-				
-                                
-				header("refresh:2;url=queueaccept.php");
-			}
-			else
-			{
-				header("refresh:2;url=addpost.php");
-			}
-		}
-
-		else{
-
-			echo "Wrong Password";
-
-		}
-
-	}
-
-	else{
-
-		echo "No User found";
-
-	}
-
-}
-
-mysqli_close($dbs);*/
-?>
 <?PHP show_menu($user); ?>
 <form method="post" action="login.php" class="uk-form">
 
@@ -95,9 +34,9 @@ mysqli_close($dbs);*/
 
         <input name="username" type="text" placeholder="username">
 
-        <input name="password" type="password" type="password" placeholder="password">
+        <input name="password" type="password" placeholder="password">
 	<br> Rembember me!
-	<input type="checkbox" name="remember" value="yes">
+	<input type="checkbox" name="remember" value="Yes">
         <br>
 	<button class="uk-button uk-button-primary uk-button-large" name ="send"> Send to login! </button>
 
