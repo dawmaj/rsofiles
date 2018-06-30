@@ -6,7 +6,7 @@
 
     	$user=session_check();
 
-    	if (!isset($user['id'])) {
+    	if (!isset($user['id']) or $user['role'] != 1) {
 
         header("location: index.php");
 
