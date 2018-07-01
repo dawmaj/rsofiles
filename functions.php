@@ -5,24 +5,30 @@ require_once "{$hostname}settings.php";
 
 function session_check()
 {
+	//first connect to site - generate cookie, set it and give to function set_json
         if(!isset($_COOKIE['MYSID'])) {
-                $token=md5(rand(0,1000000000));
+                $token=md5(rand(0,1000000000)); //calculate string by md5
                 setcookie('MYSID', $token);
                 $user=array('id'=>NULL,'username'=>"Visitor");
                 redis_set_json($token, $user,0);
+		//value of cookie - $user array
         }
         else
-{
+	{
+	//server already knows it's the same server and presents login.php
                 $token="MYSID:".$_COOKIE['MYSID'];
-}
+	}
+//if we clicked rembember - forever else 300 seconds
 	$expire = isset($_POST['remember']) ? 0 : 300;
+//if we filled login page we autorize result in PHP as set a cookie with token
         if (isset($_POST['username']) and isset($_POST['password']))
                 return authorize($_POST['username'],$_POST['password'],$token,$expire);
-        else
+        else //we have a cookie in a site without POST
                 return authorize(NULL,NULL,$token,$expire);
 }
 function authorize($username,$password, $token, $expire)
 {
+//if we have username and pass do this
         if ($username!=NULL and $password!=NULL)
         {
                 //if ($username=="kalkos" and $password=="qwerty")
@@ -92,12 +98,12 @@ function authorize($username,$password, $token, $expire)
 	}
 }
 }
-        else
+        else //user and pass are NULL
 	{
                 return redis_get_json($token);
 	}
 }
-//this function i don't use
+//this function i don't use i have it in logout.php
 function logout($user)
 {
         $token=$_COOKIE['MYSID'];
