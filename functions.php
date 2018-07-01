@@ -116,7 +116,7 @@ function redis_set_json($key, $val, $expire)
 	//connect to redis
         $redisClient = new Redis();
 	$redisClient->connect( REDIS_SERVER, REDIS_PORT );
-	$redisClient->auth(REDIS_PASSWORD); //pass in /etc/redis/redis.conf
+	$redisClient->auth(REDIS_PASSWORD); //pass in /etc/redis/redis.conf session in /etc/php/7.0/apache2 session.save_path
       	//zakodowany string JSON
 	$value=json_encode($val);
         if ($expire > 0)

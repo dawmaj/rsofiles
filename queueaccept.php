@@ -75,6 +75,7 @@ return $post;
 	elseif (isset($_POST['yes']))
 
 	{
+		echo '<br>';
 		echo "Post with text: ".$verify;
 		$sql = "DELETE FROM posts WHERE post='$verify';";
 

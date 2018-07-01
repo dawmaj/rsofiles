@@ -1,5 +1,5 @@
 <?PHP
-    define('REDIS_SERVER','192.168.100.10');
+    define('REDIS_SERVER','localhost');
 
     define('REDIS_PORT', 6379);
 
