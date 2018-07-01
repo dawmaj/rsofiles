@@ -60,7 +60,7 @@ return $post;
 <form method="post" action="queueaccept.php">
 <?PHP
 	$verify = showPost();
-	echo "Post to delete? ".$verify;
+	echo "Remove next post in queue?";
 	// empty post not deleted
 	if (isset($_POST['yes']) and $verify == "Empty!")
 
@@ -75,9 +75,7 @@ return $post;
 	elseif (isset($_POST['yes']))
 
 	{
-		$verify = showPost();
-		echo "Post to delete? ".$verify;
-
+		echo "Post with text: ".$verify;
 		$sql = "DELETE FROM posts WHERE post='$verify';";
 
 		$dbm = mysqli_connect(DB_SERVER_M,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
